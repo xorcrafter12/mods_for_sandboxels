@@ -80,8 +80,10 @@ runAfterReset(function(){
 });
 runEveryTick(function(){
     if(worldGenerationStage == 0){
-        createPixel("basalt", Math.floor(Math.random()*width), Math.floor(Math.random()*height/4+height/4*3-(pixelTicks/width)));
-        if(pixelTicks/width/height*4 >= 1){
+        for(let i = 0; i < width; i++){
+            createPixel("basalt", Math.floor(Math.random()*width), Math.floor(Math.random()*height/4+height/4*3-(pixelTicks/width)));
+        }
+        if(pixelTicks/height*4 >= 1){
             worldGenerationStage = 1;
         }
     }
