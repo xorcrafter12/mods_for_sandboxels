@@ -1,4 +1,80 @@
 keybinds = {};
+
+// не мой код
+// ========== ДОБАВЛЯЕМ ЭКРАННЫЕ КНОПКИ ДЛЯ ТЕЛЕФОНА ==========
+(function addMobileControls() {
+    // Функция для создания кнопок
+    function createButton(id, text, keyCode, key) {
+        const btn = document.createElement("button");
+        btn.id = id;
+        btn.textContent = text;
+        Object.assign(btn.style, {
+            position: "fixed",
+            bottom: "20px",
+            width: "70px",
+            height: "70px",
+            fontSize: "24px",
+            fontWeight: "bold",
+            borderRadius: "40px",
+            border: "none",
+            background: "rgba(0,0,0,0.7)",
+            color: "white",
+            textAlign: "center",
+            zIndex: "10000",
+            touchAction: "manipulation",
+            cursor: "pointer"
+        });
+        
+        // Обработчики для ПК (мышь)
+        btn.addEventListener("mousedown", () => pressedKeys[key] = true);
+        btn.addEventListener("mouseup", () => pressedKeys[key] = false);
+        btn.addEventListener("mouseleave", () => pressedKeys[key] = false);
+        
+        // Обработчики для телефона (touch)
+        btn.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            pressedKeys[key] = true;
+        });
+        btn.addEventListener("touchend", (e) => {
+            e.preventDefault();
+            pressedKeys[key] = false;
+        });
+        btn.addEventListener("touchcancel", (e) => {
+            e.preventDefault();
+            pressedKeys[key] = false;
+        });
+        
+        return btn;
+    }
+
+    // Создаём и размещаем кнопки
+    const leftBtn = createButton("ctrlLeft", "◀", "KeyA", "a");
+    leftBtn.style.left = "20px";
+    const rightBtn = createButton("ctrlRight", "▶", "KeyD", "d");
+    rightBtn.style.left = "100px";
+    const upBtn = createButton("ctrlUp", "▲", "KeyW", "w");
+    upBtn.style.left = "180px";
+    const downBtn = createButton("ctrlDown", "▼", "KeyS", "s");
+    downBtn.style.left = "260px";
+    const breakBtn = createButton("ctrlBreak", "💥", "KeyB", "b");
+    breakBtn.style.left = "20px";
+    breakBtn.style.bottom = "100px";
+    const grabBtn = createButton("ctrlGrab", "🎒", "KeyG", "g");
+    grabBtn.style.left = "100px";
+    grabBtn.style.bottom = "100px";
+    
+    document.body.appendChild(leftBtn);
+    document.body.appendChild(rightBtn);
+    document.body.appendChild(upBtn);
+    document.body.appendChild(downBtn);
+    document.body.appendChild(breakBtn);
+    document.body.appendChild(grabBtn);
+    
+    // Небольшой лог для проверки загрузки
+    console.log("Mobile control buttons added");
+})();
+// конец не моего кода
+
 runAfterReset(function(){
     worldGenerationStage = 0;
 });
