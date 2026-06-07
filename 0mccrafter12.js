@@ -10,7 +10,7 @@ elements.steel.reactions["acid"] = {elem1:"battery", elem2:null};
 elements.rock.reactions["water"] = {elem1:"wet_rock", elem2:null};
 elements.copper.reactions["straw"] = {elem1:"filter", elem2:"filter", tempMin:300};
 elements.mud.breakInto = ["dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "dirt", "water", "rock"];
-elements.dirt.reactions["dead_plant"] = {elem1:"dirt", elem2:"dirt", chance:0.001};
+elements.dirt.reactions["dead_plant"] = {elem1:"dirt", elem2:"dirt", chance:0.001}
 elements.straw.behavior = behaviors.STURDYPOWDER;
 
 elements.filter.tempHigh = 1090;
