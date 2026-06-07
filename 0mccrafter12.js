@@ -32,12 +32,6 @@ elements.wet_rock = {
     stateHigh: "rock_wall"
 };
 
-elements.group = {
-    category: "tools",
-    tool: function(pixel){
-        pixel._r = 1;
-    }
-}
 try {
     survivalShop["fire*100"] = 10;
 } catch (error) {
@@ -45,4 +39,6 @@ try {
     survivalShop["fire*100"] = 10;
 }
 
-delete elements.heat;
+if(false){
+    delete elements.heat;
+}
