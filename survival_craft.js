@@ -1,12 +1,17 @@
 keybinds = {};
 
 // не мой код
-// === ЭКРАННЫЕ КНОПКИ (с поддержкой L и H) ===
+// === ЭКРАННЫЕ КНОПКИ (с возможностью скрыть/показать) ===
 (function addMobileButtons() {
     if (!window.pressedKeys) window.pressedKeys = {};
     
+    // Флаг видимости кнопок (по умолчанию видны)
+    let buttonsVisible = true;
+    
+    // Создаём панель с кнопками
     var panel = document.createElement('div');
-    panel.style.cssText = 'position:fixed; bottom:20px; left:0; right:0; display:flex; justify-content:center; gap:12px; z-index:99999; background:rgba(0,0,0,0.7); padding:12px; border-radius:50px; flex-wrap:wrap;';
+    panel.id = 'mobileControlPanel';
+    panel.style.cssText = 'position:fixed; bottom:20px; left:0; right:0; display:flex; justify-content:center; gap:12px; z-index:99999; background:rgba(0,0,0,0.7); padding:12px; border-radius:50px; flex-wrap:wrap; transition: opacity 0.3s;';
     
     var buttons = [
         { sym: '←', key: 'a', color: '#333' },
@@ -15,15 +20,15 @@ keybinds = {};
         { sym: '↓', key: 's', color: '#333' },
         { sym: '💥', key: 'b', color: '#aa0000' },
         { sym: '🎒', key: 'g', color: '#00aa00' },
-        { sym: '⬇️ PULL', key: 'l', color: '#ff8800' },
-        { sym: '⬆️ PUSH', key: 'h', color: '#ff8800' }
+        { sym: 'PULL', key: 'l', color: '#ff8800' },
+        { sym: 'PUSH', key: 'h', color: '#ff8800' }
     ];
     
     buttons.forEach(function(btn) {
         var button = document.createElement('button');
         button.textContent = btn.sym;
         button.style.cssText = 'width:70px; height:70px; font-size:24px; background:' + btn.color + '; color:white; border:none; border-radius:50%; touch-action:manipulation; cursor:pointer;';
-        if (btn.sym === '⬇️ PULL' || btn.sym === '⬆️ PUSH') {
+        if (btn.sym === 'PULL' || btn.sym === 'PUSH') {
             button.style.width = '80px';
             button.style.fontSize = '18px';
         }
@@ -42,8 +47,58 @@ keybinds = {};
         panel.appendChild(button);
     });
     
+    // Кнопка "Скрыть/Показать" (красный крестик)
+    var toggleBtn = document.createElement('button');
+    toggleBtn.textContent = '❌';
+    toggleBtn.style.cssText = 'width:70px; height:70px; font-size:28px; background:#880000; color:white; border:none; border-radius:50%; touch-action:manipulation; cursor:pointer;';
+    toggleBtn.title = 'Скрыть панель';
+    
+    toggleBtn.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        togglePanel();
+    });
+    toggleBtn.addEventListener('click', function() {
+        togglePanel();
+    });
+    
+    panel.appendChild(toggleBtn);
+    
+    // Кнопка для показа панели (появляется только когда панель скрыта)
+    var showBtn = document.createElement('button');
+    showBtn.textContent = '🎮';
+    showBtn.style.cssText = 'position:fixed; bottom:20px; right:20px; width:60px; height:60px; font-size:28px; background:#00aa00; color:white; border:none; border-radius:50%; touch-action:manipulation; cursor:pointer; z-index:99998;';
+    showBtn.title = 'Показать панель';
+    showBtn.style.display = 'none';
+    
+    showBtn.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        togglePanel();
+    });
+    showBtn.addEventListener('click', function() {
+        togglePanel();
+    });
+    
+    function togglePanel() {
+        buttonsVisible = !buttonsVisible;
+        if (buttonsVisible) {
+            panel.style.opacity = '1';
+            panel.style.visibility = 'visible';
+            showBtn.style.display = 'none';
+            toggleBtn.textContent = '❌';
+            toggleBtn.title = 'Скрыть панель';
+        } else {
+            panel.style.opacity = '0';
+            panel.style.visibility = 'hidden';
+            showBtn.style.display = 'flex';
+            toggleBtn.textContent = '▶';
+            toggleBtn.title = 'Показать панель';
+        }
+    }
+    
     document.body.appendChild(panel);
-    console.log('Кнопки добавлены (L и H). pressedKeys =', window.pressedKeys);
+    document.body.appendChild(showBtn);
+    
+    console.log('Кнопки добавлены. Нажмите ❌, чтобы скрыть панель, и 🎮 — чтобы показать.');
 })();
 // конец не моего кода
 
