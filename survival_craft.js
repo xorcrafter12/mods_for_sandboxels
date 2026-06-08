@@ -81,21 +81,25 @@ runAfterReset(function(){
 runEveryTick(function(){
     if(worldGenerationStage == 0){
         for(let i = 0; i < width; i++){
-            createPixel("basalt", Math.floor(Math.random()*width), Math.floor(Math.random()*height/4+height/4*3-(pixelTicks/width)));
+            createPixel("basalt", Math.floor(Math.random()*width), Math.floor(Math.random()*height/4+height/4*3-(pixelTicks)));
         }
         if(pixelTicks/height*4 >= 1){
             worldGenerationStage = 1;
         }
     }
     if(worldGenerationStage == 1){
-        createPixel("rock", Math.floor(Math.random()*width), Math.floor(Math.random()*height/4+height/4*3-(pixelTicks/width)));
-        if(pixelTicks/width/height*12/5 >= 1){
+        for(let i = 0; i < width; i++){
+            createPixel("rock", Math.floor(Math.random()*width), Math.floor(Math.random()*height/4+height/4*3-(pixelTicks)));
+        }
+        if(pixelTicks/height*12/5 >= 1){
             worldGenerationStage = 2;
         }
     }
     if(worldGenerationStage == 2){
-        createPixel("dirt", Math.floor(Math.random()*width), Math.floor(Math.random()*height/4+height/4*3-(pixelTicks/width)));
-        if(pixelTicks/width/height*2 >= 1){
+        for(let i = 0; i < width; i++){
+            createPixel("dirt", Math.floor(Math.random()*width), Math.floor(Math.random()*height/4+height/4*3-(pixelTicks)));
+        }
+        if(pixelTicks/height*2 >= 1){
             worldGenerationStage = 3;
         }
     }
