@@ -1,77 +1,49 @@
 keybinds = {};
 
 // не мой код
-// ========== ДОБАВЛЯЕМ ЭКРАННЫЕ КНОПКИ ДЛЯ ТЕЛЕФОНА ==========
-(function addMobileControls() {
-    // Функция для создания кнопок
-    function createButton(id, text, keyCode, key) {
-        const btn = document.createElement("button");
-        btn.id = id;
-        btn.textContent = text;
-        Object.assign(btn.style, {
-            position: "fixed",
-            bottom: "20px",
-            width: "70px",
-            height: "70px",
-            fontSize: "24px",
-            fontWeight: "bold",
-            borderRadius: "40px",
-            border: "none",
-            background: "rgba(0,0,0,0.7)",
-            color: "white",
-            textAlign: "center",
-            zIndex: "10000",
-            touchAction: "manipulation",
-            cursor: "pointer"
-        });
-        
-        // Обработчики для ПК (мышь)
-        btn.addEventListener("mousedown", () => pressedKeys[key] = true);
-        btn.addEventListener("mouseup", () => pressedKeys[key] = false);
-        btn.addEventListener("mouseleave", () => pressedKeys[key] = false);
-        
-        // Обработчики для телефона (touch)
-        btn.addEventListener("touchstart", (e) => {
-            e.preventDefault();
-            pressedKeys[key] = true;
-        });
-        btn.addEventListener("touchend", (e) => {
-            e.preventDefault();
-            pressedKeys[key] = false;
-        });
-        btn.addEventListener("touchcancel", (e) => {
-            e.preventDefault();
-            pressedKeys[key] = false;
-        });
-        
-        return btn;
-    }
-
-    // Создаём и размещаем кнопки
-    const leftBtn = createButton("ctrlLeft", "◀", "KeyA", "a");
-    leftBtn.style.left = "20px";
-    const rightBtn = createButton("ctrlRight", "▶", "KeyD", "d");
-    rightBtn.style.left = "100px";
-    const upBtn = createButton("ctrlUp", "▲", "KeyW", "w");
-    upBtn.style.left = "180px";
-    const downBtn = createButton("ctrlDown", "▼", "KeyS", "s");
-    downBtn.style.left = "260px";
-    const breakBtn = createButton("ctrlBreak", "💥", "KeyB", "b");
-    breakBtn.style.left = "20px";
-    breakBtn.style.bottom = "100px";
-    const grabBtn = createButton("ctrlGrab", "🎒", "KeyG", "g");
-    grabBtn.style.left = "100px";
-    grabBtn.style.bottom = "100px";
+// === ЭКРАННЫЕ КНОПКИ (с поддержкой L и H) ===
+(function addMobileButtons() {
+    if (!window.pressedKeys) window.pressedKeys = {};
     
-    document.body.appendChild(leftBtn);
-    document.body.appendChild(rightBtn);
-    document.body.appendChild(upBtn);
-    document.body.appendChild(downBtn);
-    document.body.appendChild(breakBtn);
-    document.body.appendChild(grabBtn);
+    var panel = document.createElement('div');
+    panel.style.cssText = 'position:fixed; bottom:20px; left:0; right:0; display:flex; justify-content:center; gap:12px; z-index:99999; background:rgba(0,0,0,0.7); padding:12px; border-radius:50px; flex-wrap:wrap;';
     
-    // Небольшой лог для проверки загрузки
-    console.log("Mobile control buttons added");
+    var buttons = [
+        { sym: '←', key: 'a', color: '#333' },
+        { sym: '→', key: 'd', color: '#333' },
+        { sym: '↑', key: 'w', color: '#333' },
+        { sym: '↓', key: 's', color: '#333' },
+        { sym: '💥', key: 'b', color: '#aa0000' },
+        { sym: '🎒', key: 'g', color: '#00aa00' },
+        { sym: '⬇️ PULL', key: 'l', color: '#ff8800' },
+        { sym: '⬆️ PUSH', key: 'h', color: '#ff8800' }
+    ];
+    
+    buttons.forEach(function(btn) {
+        var button = document.createElement('button');
+        button.textContent = btn.sym;
+        button.style.cssText = 'width:70px; height:70px; font-size:24px; background:' + btn.color + '; color:white; border:none; border-radius:50%; touch-action:manipulation; cursor:pointer;';
+        if (btn.sym === '⬇️ PULL' || btn.sym === '⬆️ PUSH') {
+            button.style.width = '80px';
+            button.style.fontSize = '18px';
+        }
+        
+        button.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            window.pressedKeys[btn.key] = true;
+        });
+        button.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            window.pressedKeys[btn.key] = false;
+        });
+        button.addEventListener('mousedown', function() { window.pressedKeys[btn.key] = true; });
+        button.addEventListener('mouseup', function() { window.pressedKeys[btn.key] = false; });
+        
+        panel.appendChild(button);
+    });
+    
+    document.body.appendChild(panel);
+    console.log('Кнопки добавлены (L и H). pressedKeys =', window.pressedKeys);
 })();
 // конец не моего кода
 
