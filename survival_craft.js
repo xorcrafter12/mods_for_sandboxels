@@ -102,6 +102,7 @@ keybinds = {};
 })();
 // конец не моего кода
 
+worldGenerationStage = 0;
 runAfterReset(function(){
     worldGenerationStage = 0;
 });
@@ -140,6 +141,12 @@ runEveryTick(function(){
         }
         worldGenerationStage = 4;
     }
+    if(worldGenerationStage == 4){
+        for(let i = 0; i < Math.floor(width*height/100); i++){
+            createPixel("ore_explosion", Math.floor(Math.random()*width), Math.floor(0-Math.random()*Math.random()*height/2+height));
+        }
+        worldGenerationStage = 5;
+    }
 });
 pressedKeys = {};
 document.addEventListener("keydown", function(event){
@@ -154,7 +161,7 @@ elements.player = {
     color: "#ffffff",
     state: "solid",
     density: 2000,
-    onPlace: function(){
+    onPlace: function(pixel){
         
     },
     tick: function(pixel){
@@ -167,7 +174,6 @@ elements.player = {
         }
         if(pixel.moveTimer == 0){
             if(pressedKeys.a){
-                pixel.direction = [-1, 0];
                 tryMove(pixel, pixel.x-1, pixel.y);
                 pixel.moveTimer = 6;
             }
@@ -178,6 +184,12 @@ elements.player = {
             }
         }else{
             pixel.moveTimer--;
+        }
+        if(pressedKeys.a){
+            pixel.direction = [-1, 0];
+        }
+        if(pressedKeys.d){
+            pixel.direction = [1, 0];
         }
         if(pressedKeys.s){
             pixel.direction = [0, 1];
@@ -238,5 +250,12 @@ elements.player = {
                 }
             }
         }
+    }
+}
+elements.ore_explosion = {
+    oreList: ["iron", "gold"],
+    onPlace: function(pixel){
+        let ore = elements.ore_explosion.oreList[Math.floor(Math.random()*elements.ore_explosion.oreList.length)];
+        explodeAt(pixel.x, pixel.y, Math.floor((pixel.y/2+pixel.y/2)/height*8), ore);
     }
 }
