@@ -140,8 +140,8 @@ elements.ce_pump = {
             let directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];
             pixel.direction = directions[elements.ce_pump.direction];
         }
-        pixelFrom = getPixel(pixel.x-pixel.direction[0], pixel.y-pixel.direction[1]);
-        pixelTo = getPixel(pixel.x+pixel.direction[0], pixel.y+pixel.direction[1]);
+        let pixelFrom = getPixel(pixel.x-pixel.direction[0], pixel.y-pixel.direction[1]);
+        let pixelTo = getPixel(pixel.x+pixel.direction[0], pixel.y+pixel.direction[1]);
         if(pixelFrom && pixelTo){
             if(pixelFrom.ce != undefined && pixelTo.ce != undefined){
                 pixelTo.ce += pixelFrom.ce*0.9;
@@ -259,6 +259,44 @@ elements.ce_grinder = {
             if(getPixel(pixel.x, pixel.y-1) && isBreakable(getPixel(pixel.x, pixel.y-1))){
                 breakPixel(getPixel(pixel.x, pixel.y-1));
                 pixel.ce -= 1;
+            }
+        }
+    }
+}
+elements.ce_temp_pump = {
+    color: "#ffffff",
+    category: "ce",
+    behavior: behaviors.WALL,
+    density: 2000,
+    insulate: true,
+    onSelect: function(){
+        promptChoose(
+            "choose direction",
+            ["←", "→", "↑", "↓"],
+            function(choise){
+                if(choise === null){
+                    return;
+                }
+                elements.ce_temp_pump.direction = ["←", "→", "↑", "↓"].indexOf(choise);
+            }
+        );
+    },
+    tick: function(pixel){
+        if(!pixel.ce){
+            pixel.ce = 0;
+        }
+        if(!pixel.direction){
+            let directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+            pixel.direction = directions[elements.ce_temp_pump.direction];
+        }
+        if(pixel.ce > 0){
+            let pixelFrom = getPixel(pixel.x-pixel.direction[0], pixel.y-pixel.direction[1]);
+            let pixelTo = getPixel(pixel.x+pixel.direction[0], pixel.y+pixel.direction[1]);
+            if(pixelFrom && pixelTo){
+                let tempAmount = Math.min(pixel.ce, pixelFrom.temp-absoluteZero);
+                pixelTo.temp += tempAmount;
+                pixelFrom.temp -= tempAmount;
+                pixel.ce -= tempAmount;
             }
         }
     }
