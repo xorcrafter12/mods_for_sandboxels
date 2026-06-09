@@ -97,8 +97,6 @@ keybinds = {};
     
     document.body.appendChild(panel);
     document.body.appendChild(showBtn);
-    
-    console.log('Кнопки добавлены. Нажмите ❌, чтобы скрыть панель, и 🎮 — чтобы показать.');
 })();
 // конец не моего кода
 
@@ -143,9 +141,13 @@ runEveryTick(function(){
     }
     if(worldGenerationStage == 4){
         for(let i = 0; i < Math.floor(width*height/100); i++){
-            createPixel("ore_explosion", Math.floor(Math.random()*width), Math.floor(0-Math.random()*Math.random()*height/2+height));
+            createPixel("ore_spawn", Math.floor(Math.random()*width), Math.floor(0-Math.random()*Math.random()*height/2+height));
         }
         worldGenerationStage = 5;
+    }
+    if(worldGenerationStage == 5){
+        createPixel("player", Math.floor(width/2), 0);
+        worldGenerationStage = 6;
     }
 });
 pressedKeys = {};
@@ -252,10 +254,19 @@ elements.player = {
         }
     }
 }
-elements.ore_explosion = {
-    oreList: ["iron", "gold"],
+elements.ore_spawn = {
+    oreList: ["iron", "gold", "copper", "zinc", "aluminum", "aluminum", "tin", "lead"],
     onPlace: function(pixel){
-        let ore = elements.ore_explosion.oreList[Math.floor(Math.random()*elements.ore_explosion.oreList.length)];
-        explodeAt(pixel.x, pixel.y, Math.floor((pixel.y/2+pixel.y/2)/height*8), ore);
+        if(currentPixels.includes(pixel)){
+            let x = pixel.x;
+            let y = pixel.y
+            let ore = elements.ore_spawn.oreList[Math.floor(Math.random()*elements.ore_spawn.oreList.length)];
+            changePixel(pixel, ore);
+        }
+    }
+}
+elements.compressed_world = {
+    tick: function(pixel){
+        
     }
 }
