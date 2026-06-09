@@ -1,9 +1,5 @@
 runPerPixel(function(pixel){
-    if(pixel.temp > 20){
-        pixel.temp -= 0.1;
-    }else if(pixel.temp < 20){
-        pixel.temp += 0.1;
-    }
+   pixel.temp -= (pixel.temp - airTemp)*0.001;
 });
 
 elements.steel.reactions["acid"] = {elem1:"battery", elem2:null};
