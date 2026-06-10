@@ -171,10 +171,27 @@ elements.player = {
             pixel.moveTimer = 0;
         }
 
+        if(pressedKeys.a){
+            pixel.direction = [-1, 0];
+        }
+        if(pressedKeys.d){
+            pixel.direction = [1, 0];
+        }
+        if(pressedKeys.s){
+            pixel.direction = [0, 1];
+        }
         if(pressedKeys.w && !isEmpty(pixel.x, pixel.y+1)){
             tryMove(pixel, pixel.x, pixel.y-1);
         }
         if(pixel.moveTimer == 0){
+            if(pressedKeys.a || pressedKeys.s || pressedKeys.d){
+                let frontPixel = getPixel(pixel.x+pixel.direction[0], pixel.y+pixel.direction[1]);
+                if(frontPixel){
+                    if(frontPixel.element == "compressed_world"){
+
+                    }
+                }
+            }
             if(pressedKeys.a){
                 tryMove(pixel, pixel.x-1, pixel.y);
                 pixel.moveTimer = 6;
@@ -186,15 +203,6 @@ elements.player = {
             }
         }else{
             pixel.moveTimer--;
-        }
-        if(pressedKeys.a){
-            pixel.direction = [-1, 0];
-        }
-        if(pressedKeys.d){
-            pixel.direction = [1, 0];
-        }
-        if(pressedKeys.s){
-            pixel.direction = [0, 1];
         }
         if(isEmpty(pixel.x, pixel.y+1)){
             if(!pressedKeys.w || isEmpty(pixel.x, pixel.y+2)){
@@ -226,6 +234,22 @@ elements.player = {
         }else if(!pressedKeys.g && pixel.bagUsed){
             pixel.bagUsed = false;
         }
+
+        if((pressedKeys.h || pressedKeys.l) && (isEmpty(pixel.x+pixel.direction[0], pixel.y+pixel.direction[1]) || isEmpty(pixel.x+pixel.direction[0]*2, pixel.y+pixel.direction[1]*2))){
+            let stick;
+            if(pressedKeys.h){
+                stick = getPixel(pixel.x+pixel.direction[0], pixel.y+pixel.direction[1]);
+            }else{
+                stick = getPixel(pixel.x+pixel.direction[0]*2, pixel.y+pixel.direction[1]*2);
+            }
+            if(stick && ["wood", "tree_branch"].includes(stick.element)){
+                let fuel = getPixel(stick.x, stick.y+1);
+                if(fuel && ["grass", "straw", "charcoal"].includes(fuel.element)){
+                    stick.temp += ["tree_branch", "wood"].indexOf(stick.element)+1;
+                    fuel.temp += ["grass", "straw", "charcoal"].indexOf(fuel.element)+1;
+                }
+            }
+        }
         if(pressedKeys.h){
             if(getPixel(pixel.x+pixel.direction[0], pixel.y+pixel.direction[1])){
                 tryMove(getPixel(pixel.x+pixel.direction[0], pixel.y+pixel.direction[1]), pixel.x+pixel.direction[0]*2, pixel.y+pixel.direction[1]*2);
@@ -234,22 +258,6 @@ elements.player = {
         if(pressedKeys.l){
             if(getPixel(pixel.x+pixel.direction[0]*2, pixel.y+pixel.direction[1]*2)){
                 tryMove(getPixel(pixel.x+pixel.direction[0]*2, pixel.y+pixel.direction[1]*2), pixel.x+pixel.direction[0], pixel.y+pixel.direction[1]);
-            }
-        }
-        if(pressedKeys.h || pressedKeys.l){
-            let stick;
-            if(pressedKeys.h){
-                stick = getPixel(pixel.x+pixel.direction[0]*2, pixel.y+pixel.direction[1]*2);
-            }else{
-                stick = getPixel(pixel.x+pixel.direction[0], pixel.y+pixel.direction[1]);
-            }
-            if(stick && ["wood", "tree_branch"].includes(stick.element)){
-                let fuel = getPixel(stick.x, stick.y+1);
-                if(fuel && ["grass", "straw", "charcoal"].includes(fuel.element)){
-                    stick.temp += 1;
-                    fuel.temp += 1;
-                    console.log(stick.temp);
-                }
             }
         }
     }
@@ -269,4 +277,5 @@ elements.compressed_world = {
     tick: function(pixel){
         
     }
+
 }
